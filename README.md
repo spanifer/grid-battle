@@ -1,31 +1,122 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+<h1 align="center">Grid Battlefield (a battleships game)</h1>
 
-Welcome spanifer,
+[View the live project here.](https://grid-battle.herokuapp.com/)
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **August 17, 2021**
+DESCRIPTION
 
-## Reminders
+![Responsive Design from http://ami.responsivedesign.is/]()
 
-* Your code must be placed in the `run.py` file
-* Your dependencies must be placed in the `requirements.txt` file
-* Do not edit any of the other files or your code may not deploy properly
+# Table of content
 
-## Creating the Heroku app
++ [Gameplay instructions](#gameplay)
++ [Features](#features)
++ [Design Process](#design-process)
++ [Technologies used](#technologies-used)
++ [Testing](#testing)
++ [Deployment](#deployment)
++ [Credits](#credits)
 
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
+***
 
-1. `heroku/python`
-2. `heroku/nodejs`
+<h2 id="gameplay">How to play</h2>
+<a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
 
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
+## Features
+<a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
 
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
+- Main menu
 
-Connect your GitHub repository and deploy as normal.
+- Battleships game
 
-## Constraints
+- High Scores
 
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
+- Game Rules
 
------
-Happy coding!
+
+## Design Process
+
+### Base Plan
+
+-   #### User Stories
+
+-   #### Application Aim
+
+-   #### Roadmap
+
+-   #### Implementation Priorities
+
+### Flowchart
+
+![](readme/diagrams/)
+
+### Data Model
+
+![](readme/diagrams/)
+
+## Technologies Used
+<a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
+
+### Languages Used
+
+-   [Python](https://en.wikipedia.org/wiki/Python_(programming_language))
+
+### Frameworks, Libraries & Programs Used
+
+1. [Git](https://git-scm.com/)
+1. [GitHub](https://github.com/)
+1. [draw.io](https://www.diagrams.net/)
+
+## Testing
+<a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
+
+### Validators Testing
+-   [W3C Markup Validator](https://jigsaw.w3.org/css-validator/#validate_by_input)
+-   [W3C CSS Validator](https://jigsaw.w3.org/css-validator/#validate_by_input)
+-   [Python](http://pep8online.com/)
+
+### Testing User Stories
+
+### Further Testing
+
+-   ~~Friends and family members were asked to review the app~~
+
+### Known Bugs
+
+-   ?
+
+## Deployment
+<a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
+
+The project was deployed using Code Institute's mock terminal for Heroku.
+
+-   Steps for deployment:
+    -   Fork or clone this repository
+    -   Create a new Heroku app
+    -   In the app settings:
+        -   Add a config var of `PORT`:`8000`
+        -   Set the buildpacks to `Python` and `NodeJS` in that order
+    -   Link the Heroku app to the forked repository
+    -   Manually **Deploy**
+
+### Making a Local Clone
+
+> *Review* to make the whole project locally deployable
+Requires Python 3 installed in local environment, to run the game in a terminal
+
+-   Fork or clone this repository
+-   Navigate to folder in a terminal
+-   Run the following command `python3 run.py`
+
+## Credits
+<a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
+
+### Code
+
+-   [Python Docs](https://docs.python.org/3.8/)
+-   [Markdown Guide](https://www.markdownguide.org/cheat-sheet/)
+
+### Acknowledgements
+
+-   Code Institute for the deployment terminal
+-   [Pen and paper](http://www.papg.com/show?1TMC) website for the game rules reference
+-   README.md structure inspired by several Code Institute's samples
