@@ -1,11 +1,11 @@
-from src.methods.menu import menu
+from src.menu import menu
 
 
 def main():
     '''
     Application entry point, show interactive menu
     '''
-    menu()    
+    menu()
 
 
 main()
