@@ -6,6 +6,14 @@ class Ship:
         self.__length = length
         self.__name = name
 
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def length(self):
+        return self.__length
+
 
 # The following subclasses are specific ships with properties
 
