@@ -67,7 +67,7 @@ To have an understanding of the required step for the application, I have create
 
 ### Data Model
 
-![](readme/diagrams/)
+![Data Model](readme/diagrams/data-model.drawio.svg)
 
 ## Technologies Used
 <a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
