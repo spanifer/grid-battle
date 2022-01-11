@@ -1,8 +1,12 @@
 <h1 align="center">Grid Battlefield (a battleships game)</h1>
 
-[View the live project here.](https://grid-battle.herokuapp.com/)
+The pencil and paper game implementation in a terminal application.
 
-DESCRIPTION
+Battleships is a turn based, two player game, set in a indexed finite grid space. This app allow you to play against the computer.
+
+As a child I played this game with my father with somewhat different setup, called Battleplanes. My ultimate goal is to have the well known Battleships game and the derived Battleplanes game mode implemented in the application.
+
+[View the live project here.](https://grid-battle.herokuapp.com/)
 
 ![Responsive Design from http://ami.responsivedesign.is/]()
 
@@ -32,22 +36,34 @@ DESCRIPTION
 
 - Game Rules
 
+- Battleplanes game mode
 
 ## Design Process
 
 ### Base Plan
 
 -   #### User Stories
+    1.  As a new user I want to get a general unambiguous read of the game rules.
+    1.  As a user I want to be able to play a game, with clear responses of the game state.
+    1.  As a user I want to review other players achieved top scores.
 
 -   #### Application Aim
-
+    -   To communicate the game course clearly.
+    -   To give the option for the player to save an achieved high score.
+    -   To allow the user to have an unambiguous, error free, gameplay experience.
 -   #### Roadmap
-
--   #### Implementation Priorities
+    1.  *Menu* - main menu with multiple options
+    1.  *Battleships game* - the main game implementation
+    1.  *High scores* - stored in a local json
+    1.  *Game rules* - description of
+    1.  *Battleplanes game mode* - the special game
+    1.  Testing
 
 ### Flowchart
 
-![](readme/diagrams/)
+To have an understanding of the required step for the application, I have created the following flowchart using draw.io.
+
+![Flowchart](readme/diagrams/flowchart.drawio.svg)
 
 ### Data Model
 
@@ -114,6 +130,8 @@ Requires Python 3 installed in local environment, to run the game in a terminal
 
 -   [Python Docs](https://docs.python.org/3.8/)
 -   [Markdown Guide](https://www.markdownguide.org/cheat-sheet/)
+
+-   [How to clear screen with Python](https://stackoverflow.com/questions/2084508/clear-terminal-in-python#answer-36941376)
 
 ### Acknowledgements
 
