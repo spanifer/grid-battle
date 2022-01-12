@@ -2,40 +2,39 @@ class Board:
     '''
     Creates an instance of a game board
     '''
-    def __init__(self, owner = 'npc'):
+    def __init__(self, owner):
         self.owner = owner
         self.board = self.__create_board()
 
     # Chars used on the board
     __charList = {
-            'empty':'.',
-            'part':'0',
-            'damaged':'X',
+            'empty': '.',
+            'part': '0',
+            'damaged': 'X',
             'miss': 'm'
     }
 
     # Directions vector list in order as
     # UP, RIGHT, DOWN, LEFT
     __directions = [
-        [0,1],
-        [1,0],
-        [0,-1],
-        [-1,0]
+        [0, 1],
+        [1, 0],
+        [0, -1],
+        [-1, 0]
     ]
 
-
-    def __create_board(self, x = 13,y = 13):
+    def __create_board(self, x=13, y=13):
         '''
         Initializes the game board
         as a list of lists
         '''
         board = []
-        for i in range(y):
+        for ignore in range(y):
             row = []
-            for j in range(x):
+            for ignore in range(x):
                 row.append(self.__charList['empty'])
             board.append(row)
-        
+
         return board
 
     def place_ship(self, origin, direction):

@@ -1,7 +1,6 @@
 import os
 from src.classes.ships import *
 from src.classes.player import Player
-from src.classes.board import Board
 
 # The defined game rule requires the following number of ships
 list_of_ships = [
@@ -56,14 +55,41 @@ def choose_placement_type():
         return choose_placement_type()
 
 
+def game_board(player, computer):
+    '''
+    Prints the game area with the player and computer boards,
+    shot count and player info
+    Each column of the board row have 3 char length
+
+    '''
+    board_width = len(player.board[0])
+    board_height = len(player.board)
+
+    os.system('cls||clear')
+    print(f'\n {player.name}{" "*17}{computer.name}')
+    print(f'{board_width} {board_height}')
+
+
 def start_game():
     '''Game entry point'''
     os.system('cls||clear')
 
     player = Player(choose_name())
+    player.add_new_board()
+
+    computer = Player('Computer')
+    computer.add_new_board()
 
     print(f'Name is {player.name}')
 
     placement = choose_placement_type()
 
-    print(f'You chose {placement} placement')
+    game_board(player, computer)
+
+    if placement == 'random':
+        # player.board.randomly_place_ships
+        # invoke placement loop randomly
+        pass
+    else:
+        # invoke placement loop manualy
+        pass
