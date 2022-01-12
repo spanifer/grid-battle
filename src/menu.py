@@ -1,6 +1,7 @@
 import os
 from src.game import start_game
 
+
 def print_title():
     '''
     Displays the game title
@@ -10,8 +11,7 @@ def print_title():
     print('                              (a battleships game)')
 
 
-
-def print_options(invalid_str = None):
+def print_options(invalid_str=None):
     '''
     Displays the options
     And prints optional message for invalid selected option
@@ -21,11 +21,11 @@ def print_options(invalid_str = None):
     print(' 2: High scores')
     print(' 3: Game rules')
 
-    if invalid_str != None:
+    if invalid_str is not None:
         print(f'\n  Invalid choice:\n  > {invalid_str}\n  Please type a number from 1 to 3')
 
 
-def menu(option = None):
+def menu(option=None):
     '''
     (Re)displays the menu
     '''

@@ -23,10 +23,11 @@ class Board:
         [-1, 0]
     ]
 
-    def __create_board(self, x=13, y=13):
+    def __create_board(self, x=12, y=12):
         '''
         Initializes the game board
         as a list of lists
+        maximum 12 width
         '''
         board = []
         for ignore in range(y):

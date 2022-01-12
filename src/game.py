@@ -60,14 +60,43 @@ def game_board(player, computer):
     Prints the game area with the player and computer boards,
     shot count and player info
     Each column of the board row have 3 char length
+    and indexed rows and columns
 
     '''
     board_width = len(player.board[0])
     board_height = len(player.board)
 
     os.system('cls||clear')
-    print(f'\n {player.name}{" "*17}{computer.name}')
-    print(f'{board_width} {board_height}')
+    print(f'\n {player.name}{" "*(41 - len(player.name) + 1)}{computer.name}')
+
+    def create_vertical_indexes():
+        # creates a string with the column indexes (the x axis)
+        row = '  '  # leave space for horizontal indexes
+        for column_i in range(1, board_width+1):
+            # Add two spaces for a single digit, and one space for larger two digits
+            row += f" {column_i}" if column_i // 10 else f" {column_i} "
+
+        return row
+
+    vertical_indexes = create_vertical_indexes()
+    vertical_indexes += ' '*(42-len(vertical_indexes)) 
+    vertical_indexes += create_vertical_indexes()
+    print(vertical_indexes)
+
+    for row_i in range(1, board_height+1):
+        row = ''
+        ind = f"{'' if row_i // 10 else ' '}{row_i}"
+        row += ind
+        for col_i in range(board_width):
+            row += f' {player.board[row_i-1][col_i]} '
+
+        row += ' '*4
+        row += ' '*(40-len(row))
+        row += ind
+        for col_i in range(board_width):
+            row += f' {computer.board[row_i-1][col_i]} '  # ❗ Change to mask
+
+        print(row)
 
 
 def start_game():
@@ -84,12 +113,9 @@ def start_game():
 
     placement = choose_placement_type()
 
-    game_board(player, computer)
-
     if placement == 'random':
-        # player.board.randomly_place_ships
         # invoke placement loop randomly
-        pass
+        game_board(player, computer)
     else:
         # invoke placement loop manualy
-        pass
+        game_board(player, computer)
