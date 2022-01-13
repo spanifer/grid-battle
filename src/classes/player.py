@@ -20,6 +20,10 @@ class Player:
     def shots(self):
         return self.__shot_count
 
+    @property
+    def board_obj(self):
+        return self.__board
+
     def add_shot(self):
         '''Increment the shot counter by one'''
         self.__shot_count += 1

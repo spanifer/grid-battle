@@ -99,6 +99,15 @@ def game_board(player, computer):
         print(row)
 
 
+def placement_loop(p_type, player):
+    # random
+    ships = list_of_ships.copy()
+    
+    while ships:
+        ship = ships.pop(0)
+        player.board_obj.random_placement(ship[1])
+
+
 def start_game():
     '''Game entry point'''
     os.system('cls||clear')
@@ -111,11 +120,8 @@ def start_game():
 
     print(f'Name is {player.name}')
 
-    placement = choose_placement_type()
+    placement_type = choose_placement_type()
 
-    if placement == 'random':
-        # invoke placement loop randomly
-        game_board(player, computer)
-    else:
-        # invoke placement loop manualy
-        game_board(player, computer)
+    placement_loop(placement_type, player)
+
+    game_board(player, computer)
