@@ -63,7 +63,7 @@ class Board:
         while directions:
             yield directions.pop(random.randrange(len(directions)))
 
-    def __validate_range(self, x, y):
+    def validate_range(self, x, y):
         '''
         Checks if the vector is within the board range
         Returns False if it is not, otherwise True
@@ -106,7 +106,7 @@ class Board:
         while length:
             length -= 1
             nx, ny = (x+dx, y+dy)
-            if self.__validate_range(nx, ny) and self.__is_empty(nx, ny):
+            if self.validate_range(nx, ny) and self.__is_empty(nx, ny):
                 result.append((nx, ny))
                 x, y = nx, ny
             else:

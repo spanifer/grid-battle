@@ -1,14 +1,17 @@
 import os
+import re
 from src.classes.ships import *
 from src.classes.player import Player
 
 # The defined game rule requires the following number of ships
 list_of_ships = [
-    [1, AircraftCarrier()],
-    [1, Battleship()],
-    [1, Cruiser()],
-    [2, Destroyer()],
-    [2, Submarine()]
+    AircraftCarrier(),
+    Battleship(),
+    Cruiser(),
+    Destroyer(),
+    Destroyer(),
+    Submarine(),
+    Submarine()
 ]
 
 
@@ -34,6 +37,9 @@ def choose_name():
 
     if len(name) > 16:
         name = name[:16]
+    elif len(name) < 3:
+        print('Name should be at least 3 characters.')
+        return choose_name()
 
     return agree_on_name()
 
@@ -73,7 +79,7 @@ def game_board(player, computer):
         # creates a string with the column indexes (the x axis)
         row = '  '  # leave space for horizontal indexes
         for column_i in range(1, board_width+1):
-            # Add two spaces for a single digit, and one space for larger two digits
+            # Add two spaces for a single digit, and one space for two digits
             row += f" {column_i}" if column_i // 10 else f" {column_i} "
 
         return row
@@ -99,13 +105,53 @@ def game_board(player, computer):
         print(row)
 
 
-def placement_loop(p_type, player):
+def take_coords(prompt_msg, board_obj):
+    '''
+    Prompts the player to enter x, y coords
+    separated by a space or a comma using a RegEx
+    Validate cords in board range
+    Returns the coords as a tuple(x, y)
+    or 'err_msg'
+    '''
+    coords = input(prompt_msg)
+
+    # Ignores trailing whitespaces, requires 2 digits
+    # separated by a space or comma
+    # Captures digits in group
+    regex = re.compile(r'^ *(\d+)[ ,](\d+) *$').match(coords)
+    if regex:
+        x, y = int(regex.group(1)), int(regex.group(2))
+        # Visual gameboard is indexed from 1 so substract 1
+        if board_obj.validate_range(x-1, y-1):
+            # This syntax returns a tuple, not required to specify it
+            # like (x, y)
+            return x, y
+        else:
+            raise ValueError('Coordinates out of range.')
+    else:
+        raise ValueError('Could\'t find coordinates in your input.')
+
+def placement_loop(p_type, player, computer):
     # random
     ships = list_of_ships.copy()
-    
-    while ships:
-        ship = ships.pop(0)
-        player.board_obj.random_placement(ship[1])
+
+    if p_type == 'random':
+        while ships:
+            ship = ships.pop(0)
+            player.board_obj.random_placement(ship)
+            computer.board_obj.random_placement(ship)
+    elif p_type == 'manual':
+        while ships:
+            ship = ships.pop(0)
+            try:
+                x, y = take_coords(f'Choose a coordinate for your {ship.name}: ',
+                                   player.board_obj)
+            except ValueError as err_msg:
+                # NOTE: if an edge case raises the value error
+                # the meassage isn't user friendly
+                print(err_msg)
+                ships.insert(0, ship)
+                break
 
 
 def start_game():
@@ -122,6 +168,6 @@ def start_game():
 
     placement_type = choose_placement_type()
 
-    placement_loop(placement_type, player)
+    placement_loop(placement_type, player, computer)
 
     game_board(player, computer)
