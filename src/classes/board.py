@@ -91,7 +91,7 @@ class Board:
             return False
         return True
 
-    def __is_empty(self, x, y):
+    def is_empty(self, x, y):
         '''
         Checks if the coordinate is empty
         Returns False if not, otherwise True
@@ -115,7 +115,7 @@ class Board:
         while length:
             length -= 1
             nx, ny = (x+dx, y+dy)
-            if self.validate_range(nx, ny) and self.__is_empty(nx, ny):
+            if self.validate_range(nx, ny) and self.is_empty(nx, ny):
                 result.append((nx, ny))
                 x, y = nx, ny
             else:
@@ -150,7 +150,7 @@ class Board:
         '''
         # Find a valid coordinate on the board
         x, y = self.__rand_coord()
-        while not self.__is_empty(x, y):
+        while not self.is_empty(x, y):
             x, y = self.__rand_coord()
 
         # Call random directions iterator
@@ -179,6 +179,10 @@ class Board:
         direction is a character
         Returns True if placement is successfull, otherwise False
         '''
+        if ship.length == 1:
+            self.board[origin[1]][origin[0]] = self.__charList['part']
+            return True
+
         direction = self.__dir_from_char(direction_inp)
         found_ship_coords = self.__find_ship_coords(ship, origin, direction)
         if found_ship_coords:

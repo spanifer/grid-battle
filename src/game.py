@@ -133,10 +133,10 @@ def take_dir(msg, board_obj, ship, origin):
 def take_coords(prompt_msg, board_obj, ship):
     '''
     Prompts the player to enter x, y coords
-    separated by a space or a comma using a RegEx
-    Validate cords in board range
-    Returns the coords as a tuple(x, y)
-    or 'err_msg'
+    separated by a space or a comma 
+    Using a RegEx validate coords in board range
+    Returns the coords as a tuple first element,
+    The second element is the return value from take_dir
     '''
     coords = input(prompt_msg)
 
@@ -144,18 +144,39 @@ def take_coords(prompt_msg, board_obj, ship):
     # separated by a space or comma
     # Captures digits in group
     regex = re.compile(r'^ *(\d+)[ ,](\d+) *$').match(coords)
+
     if regex:
-        x, y = int(regex.group(1))-1, int(regex.group(2))-1
         # Visual gameboard is indexed from 1 so substract 1
-        if board_obj.validate_range(x, y):
-            if not board_obj.find_valid_dirs(ship, (x, y)):
-                print('Your ship will not fit there.')
-                return take_coords(prompt_msg, board_obj, ship)
-            return x, y
+        x, y = int(regex.group(1))-1, int(regex.group(2))-1
+        range_is_valid = board_obj.validate_range(x, y)
+        coord_is_empty = board_obj.is_empty(x, y)
+
+        # Submarine case 👇
+        available_dirs = None
+        if ship.length > 1:
+            available_dirs = board_obj.find_valid_dirs(ship, (x, y))
+
+        if not range_is_valid:
+            print('Coordinates out of range.')
+            return take_coords(prompt_msg, board_obj, ship)
+
+        if not coord_is_empty:
+            print('That space is already occupied.')
+            return take_coords(prompt_msg, board_obj, ship)
+
+        if available_dirs:
+            return ((x, y),
+                    take_dir('Choose the direction your ship lays.',
+                             board_obj, ship, (x, y)))
+        elif available_dirs is None:
+            board_obj = board_obj.place_ship(ship, (x, y), None)
+            return ((x, y), )
         else:
-            raise ValueError('Coordinates out of range.')
+            print('Your ship will not fit there.')
+            return take_coords(prompt_msg, board_obj, ship)
     else:
-        raise ValueError('Could\'t find a coordinate in your input.')
+        print('Could\'t find a coordinate in your input.')
+        return take_coords(prompt_msg, board_obj, ship)
 
 
 def placement_loop(p_type, player, computer):
@@ -174,22 +195,13 @@ def placement_loop(p_type, player, computer):
     elif p_type == 'manual':
         while ships:
             ship = ships.pop(0)
-            try:
-                game_board(player, computer)
-                x, y = take_coords(
-                    f'Choose a coordinate for your {ship.name}: ',
-                    player.board_obj,
-                    ship)
-                ship_coords = take_dir(
-                    f'Choose the direction your ship lays.',
-                    player.board_obj, ship, (x, y))
-            except ValueError as err_msg:
-                # NOTE: if an edge case raises the value error
-                # the meassage isn't user friendly
-                ships.insert(0, ship)
-                
-                print(err_msg)
-                time.sleep(2.5)
+            game_board(player, computer)
+            take_coords(
+                f'Choose a coordinate for your {ship.name}: ',
+                player.board_obj,
+                ship)
+            computer.board_obj.random_placement(ship)
+        game_board(player, computer)
 
 
 def start_game():
@@ -207,4 +219,3 @@ def start_game():
     placement_type = choose_placement_type()
 
     placement_loop(placement_type, player, computer)
-
