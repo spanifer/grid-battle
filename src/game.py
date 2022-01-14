@@ -148,7 +148,6 @@ def take_coords(prompt_msg, board_obj, ship):
         # Visual gameboard is indexed from 1 so substract 1
         x, y = int(regex.group(1))-1, int(regex.group(2))-1
         range_is_valid = board_obj.validate_range(x, y)
-        coord_is_empty = board_obj.is_empty(x, y)
 
         # Submarine case 👇
         available_dirs = None
@@ -159,6 +158,7 @@ def take_coords(prompt_msg, board_obj, ship):
             print('Coordinates out of range.')
             return take_coords(prompt_msg, board_obj, ship)
 
+        coord_is_empty = board_obj.is_empty(x, y)
         if not coord_is_empty:
             print('That space is already occupied.')
             return take_coords(prompt_msg, board_obj, ship)
