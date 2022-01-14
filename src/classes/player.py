@@ -24,6 +24,10 @@ class Player:
     def board_obj(self):
         return self.__board
 
+    @property
+    def ships(self):
+        return self.__board.ships
+
     def add_shot(self):
         '''Increment the shot counter by one'''
         self.__shot_count += 1
@@ -32,3 +36,14 @@ class Player:
         '''A Board instance can be added later if none defined at init'''
         self.__board = Board(self.__name)
         self.board = self.__board.board
+
+
+class Computer(Player):
+    '''
+    Creates a computer specific player instance
+    '''
+    def __init__(self, name, board):
+        Player.__init__(self, self.__random_name(), board)
+
+    def __random_name(self):
+        return 'Computer'

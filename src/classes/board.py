@@ -8,6 +8,8 @@ class Board:
     def __init__(self, owner):
         self.owner = owner
         self.board = self.__create_board()
+        self.ships = []
+        self.ships_pos = set()
         self.__width = len(self.board[0])
         self.__height = len(self.board)
 
@@ -60,7 +62,7 @@ class Board:
 
         return board
 
-    def __rand_coord(self):
+    def rand_coord(self):
         return (random.randrange(self.width), random.randrange(self.height))
 
     def __rand_directions(self):
@@ -147,11 +149,13 @@ class Board:
         Will call itself recursively if unable to place ship and try again
         with another random position
         If finds a suitable position, place the value(s) on the board
+        Also add ship positions to the set (self.ships_pos) the Ship instance
+        to the ships list (self.ships)
         '''
         # Find a valid coordinate on the board
-        x, y = self.__rand_coord()
+        x, y = self.rand_coord()
         while not self.is_empty(x, y):
-            x, y = self.__rand_coord()
+            x, y = self.rand_coord()
 
         # Call random directions iterator
         dirs = self.__rand_directions()
@@ -169,7 +173,10 @@ class Board:
                 # If ship can be placed on given direction break the loop
                 break
 
+        self.ships.append(ship)
+
         for (x, y) in found_coords:
+            self.ships_pos.add((x, y))
             self.board[y][x] = self.__charList['part']
 
     def place_ship(self, ship, origin, direction_inp):
@@ -178,6 +185,8 @@ class Board:
         origin parameter is a vectors
         direction is a character
         Returns True if placement is successfull, otherwise False
+        Also add ship positions to the set (self.ships_pos) the Ship instance
+        to the ships list (self.ships)
         '''
         if ship.length == 1:
             self.board[origin[1]][origin[0]] = self.__charList['part']
@@ -186,7 +195,9 @@ class Board:
         direction = self.__dir_from_char(direction_inp)
         found_ship_coords = self.__find_ship_coords(ship, origin, direction)
         if found_ship_coords:
+            self.ships.append(ship)
             for x, y in found_ship_coords:
+                self.ships_pos.add((x, y))
                 self.board[y][x] = self.__charList['part']
             return True
         else:
