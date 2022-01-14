@@ -37,6 +37,7 @@ def choose_name():
 
     if len(name) > 16:
         name = name[:16]
+        print('Name is longer than 16 characters.')
     elif len(name) < 3:
         print('Name should be at least 3 characters.')
         return choose_name()
@@ -178,29 +179,34 @@ def take_coords(prompt_msg, board_obj, ship):
         return take_coords(prompt_msg, board_obj, ship)
 
 
-def placement_loop(p_type, player, computer):
+def random_placement(player, computer):
     '''
-    Loops through the list of ships for the given placement type
+    Loops through the list of ships and randomly place them on board
     '''
     ships = list_of_ships.copy()
 
-    if p_type == 'random':
-        while ships:
-            ship = ships.pop(0)
-            player.board_obj.random_placement(ship)
-            computer.board_obj.random_placement(ship)
-        game_board(player, computer)
+    while ships:
+        ship = ships.pop(0)
+        player.board_obj.random_placement(ship)
+        computer.board_obj.random_placement(ship)
+    game_board(player, computer)
 
-    elif p_type == 'manual':
-        while ships:
-            ship = ships.pop(0)
-            game_board(player, computer)
-            take_coords(
-                f'Choose a coordinate for your {ship.name}: ',
-                player.board_obj,
-                ship)
-            computer.board_obj.random_placement(ship)
+
+def manual_placement(player, computer):
+    '''
+    Loops through the list of ships and randomly place them on board
+    '''
+    ships = list_of_ships.copy()
+
+    while ships:
+        ship = ships.pop(0)
         game_board(player, computer)
+        take_coords(
+            f'Choose a coordinate for your {ship.name}: ',
+            player.board_obj,
+            ship)
+        computer.board_obj.random_placement(ship)
+    game_board(player, computer)
 
 
 def start_game():
@@ -217,4 +223,8 @@ def start_game():
 
     placement_type = choose_placement_type()
 
-    placement_loop(placement_type, player, computer)
+    # Placement loop
+    if placement_type == 'random':
+        random_placement(player, computer)
+    elif placement_type == 'manual':
+        manual_placement(player, computer)
