@@ -1,5 +1,6 @@
 import os
 import re
+import time
 from src.classes.ships import *
 from src.classes.player import Player
 
@@ -105,7 +106,31 @@ def game_board(player, computer):
         print(row)
 
 
-def take_coords(prompt_msg, board_obj):
+def take_dir(msg, board_obj, ship, origin):
+    '''
+    Take user input for a choice of direction
+    as defined in Board w,a,s,d for up,left,down,right
+    Returns Board.place_ship() return value
+    Alternatively recursively calls itself
+    '''
+    print(msg)
+
+    dir_list = board_obj.find_valid_dirs(ship, origin)
+    valid_dir_list = [char.upper() for char, _ in dir_list]
+    dir_input = input(f'Valid directions are: {", ".join(valid_dir_list) } > ')
+
+    regex = re.compile(f'^[{"".join(valid_dir_list)}]', re.I).match(dir_input)
+    if regex:
+        direction = regex.group()
+        ship_placed = board_obj.place_ship(ship, origin, direction)
+        if ship_placed:
+            return ship_placed
+    else:
+        print('No such direction.')
+        return take_dir(msg, board_obj, ship, origin)
+
+
+def take_coords(prompt_msg, board_obj, ship):
     '''
     Prompts the player to enter x, y coords
     separated by a space or a comma using a RegEx
@@ -120,19 +145,23 @@ def take_coords(prompt_msg, board_obj):
     # Captures digits in group
     regex = re.compile(r'^ *(\d+)[ ,](\d+) *$').match(coords)
     if regex:
-        x, y = int(regex.group(1)), int(regex.group(2))
+        x, y = int(regex.group(1))-1, int(regex.group(2))-1
         # Visual gameboard is indexed from 1 so substract 1
-        if board_obj.validate_range(x-1, y-1):
-            # This syntax returns a tuple, not required to specify it
-            # like (x, y)
+        if board_obj.validate_range(x, y):
+            if not board_obj.find_valid_dirs(ship, (x, y)):
+                print('Your ship will not fit there.')
+                return take_coords(prompt_msg, board_obj, ship)
             return x, y
         else:
             raise ValueError('Coordinates out of range.')
     else:
-        raise ValueError('Could\'t find coordinates in your input.')
+        raise ValueError('Could\'t find a coordinate in your input.')
+
 
 def placement_loop(p_type, player, computer):
-    # random
+    '''
+    Loops through the list of ships for the given placement type
+    '''
     ships = list_of_ships.copy()
 
     if p_type == 'random':
@@ -140,18 +169,27 @@ def placement_loop(p_type, player, computer):
             ship = ships.pop(0)
             player.board_obj.random_placement(ship)
             computer.board_obj.random_placement(ship)
+        game_board(player, computer)
+
     elif p_type == 'manual':
         while ships:
             ship = ships.pop(0)
             try:
-                x, y = take_coords(f'Choose a coordinate for your {ship.name}: ',
-                                   player.board_obj)
+                game_board(player, computer)
+                x, y = take_coords(
+                    f'Choose a coordinate for your {ship.name}: ',
+                    player.board_obj,
+                    ship)
+                ship_coords = take_dir(
+                    f'Choose the direction your ship lays.',
+                    player.board_obj, ship, (x, y))
             except ValueError as err_msg:
                 # NOTE: if an edge case raises the value error
                 # the meassage isn't user friendly
-                print(err_msg)
                 ships.insert(0, ship)
-                break
+                
+                print(err_msg)
+                time.sleep(2.5)
 
 
 def start_game():
@@ -170,4 +208,3 @@ def start_game():
 
     placement_loop(placement_type, player, computer)
 
-    game_board(player, computer)

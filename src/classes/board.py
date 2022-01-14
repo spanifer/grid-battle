@@ -29,6 +29,15 @@ class Board:
     ]
 
     @property
+    def get_dirs(self):
+        return zip(('w', 'd', 's', 'a'), self.__directions)
+
+    def __dir_from_char(self, inp_char):
+        for char, vector in self.get_dirs:
+            if char == inp_char.lower():
+                return vector
+
+    @property
     def width(self):
         return self.__width
 
@@ -114,6 +123,24 @@ class Board:
 
         return result
 
+    def find_valid_dirs(self, ship, origin):
+        '''
+        Finds available directions
+        Returns the found directions in a list of character values
+                                    and coresponding vector values
+        Otherwise returns an empty list
+        '''
+        # Convert input to 0 indexed numbers
+        # by calling the new single tuple origin_inp first item
+        # in the generator comprehension
+        # origin = next(((x-1, y-1) for x, y in (origin_inp,)))
+        found_directions = []
+        for (char, direct) in self.get_dirs:
+            if self.__find_ship_coords(ship, origin, direct):
+                found_directions.append((char, direct))
+
+        return tuple(found_directions)
+
     def random_placement(self, ship):
         '''
         Place a ship on the board in a random position
@@ -145,12 +172,21 @@ class Board:
         for (x, y) in found_coords:
             self.board[y][x] = self.__charList['part']
 
-    def place_ship(self, ship, origin, direction):
+    def place_ship(self, ship, origin, direction_inp):
         '''
         Place the ship on the grid
-        The origin, and direction parameters are vectors
+        origin parameter is a vectors
+        direction is a character
+        Returns True if placement is successfull, otherwise False
         '''
-        pass
+        direction = self.__dir_from_char(direction_inp)
+        found_ship_coords = self.__find_ship_coords(ship, origin, direction)
+        if found_ship_coords:
+            for x, y in found_ship_coords:
+                self.board[y][x] = self.__charList['part']
+            return True
+        else:
+            return False
 
     def take_shot(self, x, y):
         '''
