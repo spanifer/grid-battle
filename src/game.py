@@ -1,6 +1,5 @@
 import os
 import re
-import time
 from src.classes.ships import *
 from src.classes.player import Player
 
@@ -86,7 +85,7 @@ def game_board(player, computer):
         return row
 
     vertical_indexes = create_vertical_indexes()
-    vertical_indexes += ' '*(42-len(vertical_indexes)) 
+    vertical_indexes += ' '*(42-len(vertical_indexes))
     vertical_indexes += create_vertical_indexes()
     print(vertical_indexes)
 
@@ -133,7 +132,7 @@ def take_dir(msg, board_obj, ship, origin):
 def take_coords(prompt_msg, board_obj, ship):
     '''
     Prompts the player to enter x, y coords
-    separated by a space or a comma 
+    separated by a space or a comma
     Using a RegEx validate coords in board range
     Returns the coords as a tuple first element,
     The second element is the return value from take_dir
