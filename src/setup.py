@@ -2,7 +2,7 @@ import os
 import re
 from src.classes.ships import *
 from src.classes.player import Player
-from src.game import game_loop
+from src.classes.game import Game
 
 # The defined game rule requires the following number of ships
 list_of_ships = [
@@ -231,4 +231,4 @@ def init_game():
     elif placement_type == 'manual':
         manual_placement(player, computer)
 
-    game_loop()
+    Game(player, computer)
