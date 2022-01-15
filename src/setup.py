@@ -126,7 +126,7 @@ def take_coords(prompt_msg, board, ship):
                     take_dir('Choose the direction your ship lays.',
                              board, ship, (x, y)))
         elif available_dirs is None:
-            board_obj = board.place_ship(ship, (x, y), None)
+            board = board.place_ship(ship, (x, y), None)
             return ((x, y), )
         else:
             print('Your ship will not fit there.')
