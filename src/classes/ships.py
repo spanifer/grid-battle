@@ -5,6 +5,7 @@ class Ship:
     def __init__(self, length, name):
         self.__length = length
         self.__name = name
+        self.positions = set()
 
     @property
     def name(self):
@@ -13,6 +14,26 @@ class Ship:
     @property
     def length(self):
         return self.__length
+
+    def add_pos(self, coord):
+        self.positions.add(coord)
+        return self
+
+    def take_hit(self, coord):
+        '''
+        Checks if the ship is on the given coordinate
+        Returns:
+            - False if it is not
+            - True if ship got a hit
+            - self if ship sank
+        '''
+        try:
+            self.positions.remove(coord)
+        except KeyError:
+            return False
+        if not len(self.positions):
+            return self
+        return True
 
 
 # The following subclasses are specific ships with properties

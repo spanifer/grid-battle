@@ -6,13 +6,13 @@ from src.classes.game import Game
 
 # The defined game rule requires the following number of ships
 list_of_ships = [
-    AircraftCarrier(),
-    Battleship(),
-    Cruiser(),
-    Destroyer(),
-    Destroyer(),
-    Submarine(),
-    Submarine()
+    AircraftCarrier,
+    Battleship,
+    Cruiser,
+    Destroyer,
+    Destroyer,
+    Submarine,
+    Submarine
 ]
 
 
@@ -63,7 +63,7 @@ def choose_placement_type():
         return choose_placement_type()
 
 
-def take_dir(msg, board_obj, ship, origin):
+def take_dir(msg, board, ship, origin):
     '''
     Take user input for a choice of direction
     as defined in Board w,a,s,d for up,left,down,right
@@ -72,22 +72,22 @@ def take_dir(msg, board_obj, ship, origin):
     '''
     print(msg)
 
-    dir_list = board_obj.find_valid_dirs(ship, origin)
+    dir_list = board.find_valid_dirs(ship, origin)
     valid_dir_list = [char.upper() for char, _ in dir_list]
     dir_input = input(f'Valid directions are: {", ".join(valid_dir_list) } > ')
 
     regex = re.compile(f'^[{"".join(valid_dir_list)}]', re.I).match(dir_input)
     if regex:
         direction = regex.group()
-        ship_placed = board_obj.place_ship(ship, origin, direction)
+        ship_placed = board.place_ship(ship, origin, direction)
         if ship_placed:
             return ship_placed
     else:
         print('No such direction.')
-        return take_dir(msg, board_obj, ship, origin)
+        return take_dir(msg, board, ship, origin)
 
 
-def take_coords(prompt_msg, board_obj, ship):
+def take_coords(prompt_msg, board, ship):
     '''
     Prompts the player to enter x, y coords
     separated by a space or a comma
@@ -105,35 +105,35 @@ def take_coords(prompt_msg, board_obj, ship):
     if regex:
         # Visual gameboard is indexed from 1 so substract 1
         x, y = int(regex.group(1))-1, int(regex.group(2))-1
-        range_is_valid = board_obj.validate_range(x, y)
+        range_is_valid = board.validate_range(x, y)
 
         # Submarine case 👇
         available_dirs = None
         if ship.length > 1:
-            available_dirs = board_obj.find_valid_dirs(ship, (x, y))
+            available_dirs = board.find_valid_dirs(ship, (x, y))
 
         if not range_is_valid:
             print('Coordinates out of range.')
-            return take_coords(prompt_msg, board_obj, ship)
+            return take_coords(prompt_msg, board, ship)
 
-        coord_is_empty = board_obj.is_empty(x, y)
+        coord_is_empty = board.is_empty(x, y)
         if not coord_is_empty:
             print('That space is already occupied.')
-            return take_coords(prompt_msg, board_obj, ship)
+            return take_coords(prompt_msg, board, ship)
 
         if available_dirs:
             return ((x, y),
                     take_dir('Choose the direction your ship lays.',
-                             board_obj, ship, (x, y)))
+                             board, ship, (x, y)))
         elif available_dirs is None:
-            board_obj = board_obj.place_ship(ship, (x, y), None)
+            board_obj = board.place_ship(ship, (x, y), None)
             return ((x, y), )
         else:
             print('Your ship will not fit there.')
-            return take_coords(prompt_msg, board_obj, ship)
+            return take_coords(prompt_msg, board, ship)
     else:
         print('Could\'t find a coordinate in your input.')
-        return take_coords(prompt_msg, board_obj, ship)
+        return take_coords(prompt_msg, board, ship)
 
 
 def random_placement(game):
@@ -144,8 +144,8 @@ def random_placement(game):
 
     while ships:
         ship = ships.pop(0)
-        game.player.board_obj.random_placement(ship)
-        game.computer.board_obj.random_placement(ship)
+        game.player.board.random_placement(ship())
+        game.computer.board.random_placement(ship())
     game.game_board()
 
 
@@ -160,10 +160,10 @@ def manual_placement(game):
         ship = ships.pop(0)
         game.game_board()
         take_coords(
-            f'Choose a coordinate for your {ship.name}: ',
-            game.player.board_obj,
-            ship)
-        game.computer.board_obj.random_placement(ship)
+            f'Choose a coordinate for your {ship().name}: ',
+            game.player.board,
+            ship())
+        game.computer.board.random_placement(ship())
     game.game_board()
 
 

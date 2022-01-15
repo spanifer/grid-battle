@@ -26,7 +26,7 @@ class Game:
             'Take a guess as the number of '
             'the column and row like: X,Y or X Y'
             '\n Your guess is: ',
-            self.computer.board_obj)
+            self.computer.board)
 
         self.player.add_shot()
         self.game_board()
@@ -38,11 +38,11 @@ class Game:
 
     def __computer_turn(self):
         '''Computer turn'''
-        comp_guess = self.computer.board_obj.rand_coord()
-        if self.player.board_obj.validate_shot(*comp_guess):
+        comp_guess = self.computer.board.rand_coord()
+        if self.player.board.validate_shot(*comp_guess):
             # This can and will randomly cause recursion overflow
             return self.__computer_turn()
-        if self.player.board_obj.take_shot(*comp_guess):
+        if self.player.board.take_shot(*comp_guess):
             self.game_board()
             print('You received a hit.')
         else:
@@ -51,8 +51,8 @@ class Game:
 
     def __check_win(self):
         '''Checks if one of the players lost all of their ships'''
-        if (len(self.player.ships_pos) and
-                len(self.computer.ships_pos)):
+        if (len(self.player.ships) and
+                len(self.computer.ships)):
             return True
         return False
 
@@ -67,8 +67,8 @@ class Game:
         player = self.player
         computer = self.computer
 
-        board_width = len(player.board[0])
-        board_height = len(player.board)
+        board_width = player.board.width
+        board_height = player.board.height
 
         os.system('cls||clear')
         print(f'\n {player.name}'
@@ -93,12 +93,12 @@ class Game:
             ind = f"{'' if row_i // 10 else ' '}{row_i}"
             row += ind
             for col_i in range(board_width):
-                row += f' {player.board[row_i-1][col_i]} '
+                row += f' {player.board.board[row_i-1][col_i]} '
 
             row += ' '*4
             row += ' '*(40-len(row))
             row += ind
             for col_i in range(board_width):
-                row += f' {computer.board[row_i-1][col_i]} '  # ❗ Change to mask
+                row += f' {computer.board.board[row_i-1][col_i]} '  # ❗ Change to mask
 
             print(row)

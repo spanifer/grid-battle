@@ -8,8 +8,7 @@ class Board:
     def __init__(self, owner):
         self.owner = owner
         self.board = self.__create_board()
-        self.ships = []
-        self.ships_pos = set()
+        self.ships = set()  # list of ships
         self.__width = len(self.board[0])
         self.__height = len(self.board)
 
@@ -158,8 +157,7 @@ class Board:
         Will call itself recursively if unable to place ship and try again
         with another random position
         If finds a suitable position, place the value(s) on the board
-        Also add ship positions to the set (self.ships_pos) the Ship instance
-        to the ships list (self.ships)
+        Also adds ship to the self.ships set and adds the Ship.positions
         '''
         # Find a valid coordinate on the board
         x, y = self.rand_coord()
@@ -182,10 +180,9 @@ class Board:
                 # If ship can be placed on given direction break the loop
                 break
 
-        self.ships.append(ship)
-
+        self.ships.add(ship)
         for (x, y) in found_coords:
-            self.ships_pos.add((x, y))
+            ship.add_pos((x, y))
             self.board[y][x] = self.__charList['part']
 
     def place_ship(self, ship, origin, direction_inp):
@@ -194,36 +191,38 @@ class Board:
         origin parameter is a vectors
         direction is a character
         Returns True if placement is successfull, otherwise False
-        Also add ship positions to the set (self.ships_pos) the Ship instance
-        to the ships list (self.ships)
+        Also adds ship to the self.ships set and adds the Ship.positions
         '''
         if ship.length == 1:
             self.board[origin[1]][origin[0]] = self.__charList['part']
-            self.ships.append(ship)
-            self.ships_pos.add(origin)
+            self.ships.add(ship)
+            ship.add_pos(origin)
             return True
 
         direction = self.__dir_from_char(direction_inp)
         found_ship_coords = self.__find_ship_coords(ship, origin, direction)
         if found_ship_coords:
-            self.ships.append(ship)
+            self.ships.add(ship)
             for x, y in found_ship_coords:
-                self.ships_pos.add((x, y))
+                ship.add_pos((x, y))
                 self.board[y][x] = self.__charList['part']
             return True
-        else:
-            return False
+
+        return False
 
     def take_shot(self, x, y):
         '''
         Checks and modifies board for the given coordinates
-        Returns True if ship got hit, False for miss
+        Returns True if ship got hit, False for miss, or <ship> if sank
         '''
-        # I have some serious design issues
-        if (x, y) in self.ships_pos:
-            self.ships_pos.remove((x, y))
-            self.board[y][x] = self.__charList['hit']
-            return True
-        else:
-            self.board[y][x] = self.__charList['miss']
-            return False
+        # I still have design issues
+        for ship in self.ships:
+            hit = ship.take_hit((x, y))  # 'hit' can be the 'ship' if sank
+            self.ships.discard(hit)  # removes from the 'ships' if it is
+
+            if hit:
+                self.board[y][x] = self.__charList['hit']
+                return hit
+
+        self.board[y][x] = self.__charList['miss']
+        return False
