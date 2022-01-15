@@ -38,7 +38,16 @@ class Game:
 
     def __computer_turn(self):
         '''Computer turn'''
-        is_hit = take_shot_inp(prompt_msg, board_obj)
+        comp_guess = self.computer.board_obj.rand_coord()
+        if self.player.board_obj.validate_shot(*comp_guess):
+            # This can and will randomly cause recursion overflow
+            return self.__computer_turn()
+        
+        self.game_board()
+        if self.player.board_obj.take_shot(*comp_guess):
+            print('You received a hit.')
+        else:
+            print(f'{self.computer.name} missed the shot.')
 
     def __check_win(self):
         '''Checks if one of the players lost all of their ships'''

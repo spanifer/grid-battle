@@ -83,7 +83,7 @@ class Board:
             return False
         return True
 
-    def __validate_shot(self, x, y):
+    def validate_shot(self, x, y):
         '''
         Checks if the coordinate have already received a shot
         Return False if it did, otherwise True
