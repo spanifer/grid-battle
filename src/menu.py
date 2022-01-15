@@ -7,8 +7,8 @@ def print_title():
     Displays the game title
     '''
     # Centered game title
-    print('\n\n\n\n\n                                  Grid Battle')
-    print('                              (a battleships game)')
+    print(f'\n\n\n\n\n{" "*34}Grid Battle'
+          f'\n{" "*30}(a battleships game)')
 
 
 def print_options(invalid_str=None):
@@ -46,5 +46,5 @@ def menu(option=None):
         print('High scores')
     elif option == '3':
         print('Rules')
-    else:
-        menu(option)
+
+    return menu()

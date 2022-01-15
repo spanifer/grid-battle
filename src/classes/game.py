@@ -42,11 +42,11 @@ class Game:
         if self.player.board_obj.validate_shot(*comp_guess):
             # This can and will randomly cause recursion overflow
             return self.__computer_turn()
-        
-        self.game_board()
         if self.player.board_obj.take_shot(*comp_guess):
+            self.game_board()
             print('You received a hit.')
         else:
+            self.game_board()
             print(f'{self.computer.name} missed the shot.')
 
     def __check_win(self):
