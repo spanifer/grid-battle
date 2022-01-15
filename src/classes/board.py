@@ -17,7 +17,7 @@ class Board:
     __charList = {
             'empty': '.',
             'part': '0',
-            'damaged': 'X',
+            'hit': 'X',
             'miss': 'm'
     }
 
@@ -88,7 +88,7 @@ class Board:
         Checks if the coordinate have already received a shot
         Return False if it did, otherwise True
         '''
-        if self.board[y][x] not in (self.__charList['damaged'],
+        if self.board[y][x] not in (self.__charList['hit'],
                                     self.__charList['miss']):
             return False
         return True
@@ -99,6 +99,15 @@ class Board:
         Returns False if not, otherwise True
         '''
         if self.board[y][x] == self.__charList['empty']:
+            return True
+        return False
+
+    def shot_taken(self, x, y):
+        '''Checks if coordinate is a miss
+        Returns False if not, otherwise True
+        '''
+        if self.board[y][x] in (self.__charList['miss'],
+                                self.__charList['hit']):
             return True
         return False
 
@@ -190,6 +199,8 @@ class Board:
         '''
         if ship.length == 1:
             self.board[origin[1]][origin[0]] = self.__charList['part']
+            self.ships.append(ship)
+            self.ships_pos.add(origin)
             return True
 
         direction = self.__dir_from_char(direction_inp)
@@ -206,6 +217,13 @@ class Board:
     def take_shot(self, x, y):
         '''
         Checks and modifies board for the given coordinates
-        or return false if the shot is invalid
+        Returns True if ship got hit, False for miss
         '''
-        pass
+        # I have some serious design issues
+        if (x, y) in self.ships_pos:
+            self.ships_pos.remove((x, y))
+            self.board[y][x] = self.__charList['hit']
+            return True
+        else:
+            self.board[y][x] = self.__charList['miss']
+            return False

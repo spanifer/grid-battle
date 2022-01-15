@@ -25,8 +25,8 @@ class Player:
         return self.__board
 
     @property
-    def ships(self):
-        return self.__board.ships
+    def ships_pos(self):
+        return self.__board.ships_pos
 
     def add_shot(self):
         '''Increment the shot counter by one'''
@@ -42,7 +42,7 @@ class Computer(Player):
     '''
     Creates a computer specific player instance
     '''
-    def __init__(self, name, board):
+    def __init__(self, board=None):
         Player.__init__(self, self.__random_name(), board)
 
     def __random_name(self):

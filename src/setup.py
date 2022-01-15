@@ -1,7 +1,7 @@
 import os
 import re
 from src.classes.ships import *
-from src.classes.player import Player
+from src.classes.player import Player, Computer
 from src.classes.game import Game
 
 # The defined game rule requires the following number of ships
@@ -61,50 +61,6 @@ def choose_placement_type():
     else:
         print(f'Invalid answer:\n> {placement_type}\n')
         return choose_placement_type()
-
-
-def game_board(player, computer):
-    '''
-    Prints the game area with the player and computer boards,
-    shot count and player info
-    Each column of the board row have 3 char length
-    and indexed rows and columns
-
-    '''
-    board_width = len(player.board[0])
-    board_height = len(player.board)
-
-    os.system('cls||clear')
-    print(f'\n {player.name}{" "*(41 - len(player.name) + 1)}{computer.name}')
-
-    def create_vertical_indexes():
-        # creates a string with the column indexes (the x axis)
-        row = '  '  # leave space for horizontal indexes
-        for column_i in range(1, board_width+1):
-            # Add two spaces for a single digit, and one space for two digits
-            row += f" {column_i}" if column_i // 10 else f" {column_i} "
-
-        return row
-
-    vertical_indexes = create_vertical_indexes()
-    vertical_indexes += ' '*(42-len(vertical_indexes))
-    vertical_indexes += create_vertical_indexes()
-    print(vertical_indexes)
-
-    for row_i in range(1, board_height+1):
-        row = ''
-        ind = f"{'' if row_i // 10 else ' '}{row_i}"
-        row += ind
-        for col_i in range(board_width):
-            row += f' {player.board[row_i-1][col_i]} '
-
-        row += ' '*4
-        row += ' '*(40-len(row))
-        row += ind
-        for col_i in range(board_width):
-            row += f' {computer.board[row_i-1][col_i]} '  # ❗ Change to mask
-
-        print(row)
 
 
 def take_dir(msg, board_obj, ship, origin):
@@ -180,7 +136,7 @@ def take_coords(prompt_msg, board_obj, ship):
         return take_coords(prompt_msg, board_obj, ship)
 
 
-def random_placement(player, computer):
+def random_placement(game):
     '''
     Loops through the list of ships and randomly place them on board
     '''
@@ -188,12 +144,12 @@ def random_placement(player, computer):
 
     while ships:
         ship = ships.pop(0)
-        player.board_obj.random_placement(ship)
-        computer.board_obj.random_placement(ship)
-    game_board(player, computer)
+        game.player.board_obj.random_placement(ship)
+        game.computer.board_obj.random_placement(ship)
+    game.game_board()
 
 
-def manual_placement(player, computer):
+def manual_placement(game):
     '''
     Loops through the list of ships
     and prompts the player to give coordinates to place them on board
@@ -202,13 +158,13 @@ def manual_placement(player, computer):
 
     while ships:
         ship = ships.pop(0)
-        game_board(player, computer)
+        game.game_board()
         take_coords(
             f'Choose a coordinate for your {ship.name}: ',
-            player.board_obj,
+            game.player.board_obj,
             ship)
-        computer.board_obj.random_placement(ship)
-    game_board(player, computer)
+        game.computer.board_obj.random_placement(ship)
+    game.game_board()
 
 
 def init_game():
@@ -218,17 +174,19 @@ def init_game():
     player = Player(choose_name())
     player.add_new_board()
 
-    computer = Player('Computer')
+    computer = Computer()
     computer.add_new_board()
 
     print(f'Name is {player.name}')
 
     placement_type = choose_placement_type()
 
+    game = Game(player, computer)
+
     # Placement loop
     if placement_type == 'random':
-        random_placement(player, computer)
+        random_placement(game)
     elif placement_type == 'manual':
-        manual_placement(player, computer)
+        manual_placement(game)
 
-    Game(player, computer)
+    game.game_loop()
