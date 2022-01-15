@@ -9,6 +9,7 @@ class Board:
         self.owner = owner
         self.board = self.__create_board()
         self.ships = set()  # list of ships
+        self.__occupied = None  # set of occupied coords
         self.__width = len(self.board[0])
         self.__height = len(self.board)
 
@@ -45,6 +46,15 @@ class Board:
     @property
     def height(self):
         return self.__height
+
+    @property
+    def get_occupied_coords(self):
+        '''Returns the ships positions in one set'''
+        # Set comprehension noice
+        if self.__occupied is None:
+            self.__occupied = {coord for ship in self.ships
+                               for coord in ship.positions}
+        return self.__occupied
 
     def __create_board(self, x=12, y=12):
         '''
@@ -97,9 +107,9 @@ class Board:
         Checks if the coordinate is empty
         Returns False if not, otherwise True
         '''
-        if self.board[y][x] == self.__charList['empty']:
-            return True
-        return False
+        if (x, y) in self.get_occupied_coords:
+            return False
+        return True
 
     def shot_taken(self, x, y):
         '''Checks if coordinate is a miss
@@ -151,7 +161,7 @@ class Board:
 
         return tuple(found_directions)
 
-    def random_placement(self, ship):
+    def random_placement(self, ship, hide=False):
         '''
         Place a ship on the board in a random position
         Will call itself recursively if unable to place ship and try again
@@ -164,7 +174,7 @@ class Board:
         while not self.is_empty(x, y):
             x, y = self.rand_coord()
 
-        # Call random directions iterator
+        # Create random directions iterator
         dirs = self.__rand_directions()
         direction = None
         found_coords = None
@@ -183,9 +193,10 @@ class Board:
         self.ships.add(ship)
         for (x, y) in found_coords:
             ship.add_pos((x, y))
-            self.board[y][x] = self.__charList['part']
+            if not hide:
+                self.board[y][x] = self.__charList['part']
 
-    def place_ship(self, ship, origin, direction_inp):
+    def place_ship(self, ship, origin, direction_inp, hide=False):
         '''
         Place the ship on the grid
         origin parameter is a vectors
@@ -205,7 +216,8 @@ class Board:
             self.ships.add(ship)
             for x, y in found_ship_coords:
                 ship.add_pos((x, y))
-                self.board[y][x] = self.__charList['part']
+                if not hide:
+                    self.board[y][x] = self.__charList['part']
             return True
 
         return False

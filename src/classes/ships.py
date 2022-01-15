@@ -19,6 +19,9 @@ class Ship:
         self.positions.add(coord)
         return self
 
+    def check_pos(self, coord):
+        return True if coord in self.positions else False
+
     def take_hit(self, coord):
         '''
         Checks if the ship is on the given coordinate

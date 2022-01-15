@@ -99,6 +99,6 @@ class Game:
             row += ' '*(40-len(row))
             row += ind
             for col_i in range(board_width):
-                row += f' {computer.board.board[row_i-1][col_i]} '  # ❗ Change to mask
+                row += f' {computer.board.board[row_i-1][col_i]} '
 
             print(row)
