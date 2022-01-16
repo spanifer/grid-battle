@@ -1,5 +1,6 @@
 import random
 from src.helpers import center
+from src.settings import char_list, DIRECTIONS
 
 
 class Board:
@@ -18,26 +19,9 @@ class Board:
         self.fog = [(x, y) for x in range(self.width)
                     for y in range(self.height)]
 
-    # Chars used on the board
-    __charList = {
-            'empty': '.',
-            'part': '0',
-            'hit': 'X',
-            'miss': 'm'
-    }
-
-    # Directions vector list in order as
-    # UP, RIGHT, DOWN, LEFT
-    __directions = [
-        (0, -1),
-        (1, 0),
-        (0, 1),
-        (-1, 0)
-    ]
-
     @property
     def get_dirs(self):
-        return zip(('w', 'd', 's', 'a'), self.__directions)
+        return zip(('w', 'd', 's', 'a'), DIRECTIONS)
 
     def __dir_from_char(self, inp_char):
         for char, vector in self.get_dirs:
@@ -66,7 +50,7 @@ class Board:
         for _ in range(self.height):
             row = []
             for _ in range(self.width):
-                row.append(self.__charList['empty'])
+                row.append(char_list['empty'])
             board.append(row)
 
         return board
@@ -80,7 +64,7 @@ class Board:
         Generator that gives a random direction
         Or raises StopIteration exception if list of directions got cleared
         '''
-        directions = self.__directions.copy()
+        directions = DIRECTIONS.copy()
         while directions:
             yield directions.pop(random.randrange(len(directions)))
 
@@ -179,7 +163,7 @@ class Board:
         for (x, y) in found_coords:
             ship.add_pos((x, y))
             if not hide:
-                self.board[y][x] = self.__charList['part']
+                self.board[y][x] = char_list['part']
 
     def place_ship(self, ship, origin, direction_inp, hide=False):
         '''
@@ -190,7 +174,7 @@ class Board:
         Also adds ship to the self.ships set and adds the Ship.positions
         '''
         if ship.length == 1:
-            self.board[origin[1]][origin[0]] = self.__charList['part']
+            self.board[origin[1]][origin[0]] = char_list['part']
             self.ships.add(ship)
             ship.add_pos(origin)
             return True
@@ -202,7 +186,7 @@ class Board:
             for x, y in found_ship_coords:
                 ship.add_pos((x, y))
                 if not hide:
-                    self.board[y][x] = self.__charList['part']
+                    self.board[y][x] = char_list['part']
             return True
 
         return False
@@ -218,11 +202,11 @@ class Board:
             self.ships.discard(hit)  # removes from the 'ships' if it is
 
             if hit:
-                self.board[y][x] = self.__charList['hit']
+                self.board[y][x] = char_list['hit']
                 self.fog.remove((x, y))
                 return hit
 
-        self.board[y][x] = self.__charList['miss']
+        self.board[y][x] = char_list['miss']
         self.fog.remove((x, y))
         return False
 

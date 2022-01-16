@@ -1,7 +1,7 @@
 import os
 from src.classes.player import Player, Computer
 from src.classes.ships import Ship
-from src.data import list_of_ships
+from src.settings import list_of_ships
 from src.user_input import (choose_name, choose_placement_type,
                             take_coords, take_shot_inp)
 
