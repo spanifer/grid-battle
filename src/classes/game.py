@@ -38,10 +38,8 @@ class Game:
 
     def __computer_turn(self):
         '''Computer turn'''
-        comp_guess = self.computer.board.rand_coord()
-        if self.player.board.validate_shot(*comp_guess):
-            # This can and will randomly cause recursion overflow
-            return self.__computer_turn()
+        comp_guess = self.player.board.rand_coord()
+
         if self.player.board.take_shot(*comp_guess):
             self.game_board()
             print('You received a hit.')
@@ -51,10 +49,8 @@ class Game:
 
     def __check_win(self):
         '''Checks if one of the players lost all of their ships'''
-        if (len(self.player.ships) and
-                len(self.computer.ships)):
-            return True
-        return False
+        return (len(self.player.ships) and
+                len(self.computer.ships))
 
     def game_board(self):
         '''

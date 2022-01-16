@@ -6,11 +6,16 @@ class Board:
     Creates an instance of a game board
     '''
     def __init__(self, owner):
+        self.__width = 12
+        self.__height = 12
         self.owner = owner
         self.board = self.__create_board()
         self.ships = set()  # list of ships
-        self.__width = len(self.board[0])
-        self.__height = len(self.board)
+
+        # list of all available position that can take a shot
+        # the computer will only call random once on self.fog length
+        self.fog = [(x, y) for x in range(self.width)
+                    for y in range(self.height)]
 
     # Chars used on the board
     __charList = {
@@ -50,23 +55,24 @@ class Board:
         '''Returns the ships positions in one set'''
         return {coord for ship in self.ships for coord in ship.positions}
 
-    def __create_board(self, x=12, y=12):
+    def __create_board(self):
         '''
         Initializes the game board
         as a list of lists
         maximum 12 width
         '''
         board = []
-        for _ in range(y):
+        for _ in range(self.height):
             row = []
-            for _ in range(x):
+            for _ in range(self.width):
                 row.append(self.__charList['empty'])
             board.append(row)
 
         return board
 
     def rand_coord(self):
-        return (random.randrange(self.width), random.randrange(self.height))
+        '''Returns a random coord from self.fog'''
+        return self.fog[random.randrange(len(self.fog))]
 
     def __rand_directions(self):
         '''
@@ -91,10 +97,7 @@ class Board:
         Checks if the coordinate have already received a shot
         Return False if it did, otherwise True
         '''
-        if self.board[y][x] not in (self.__charList['hit'],
-                                    self.__charList['miss']):
-            return False
-        return True
+        return (x, y) in self.fog
 
     def is_empty(self, x, y):
         '''
@@ -105,16 +108,7 @@ class Board:
             return False
         return True
 
-    def shot_taken(self, x, y):
-        '''Checks if coordinate is a miss
-        Returns False if not, otherwise True
-        '''
-        if self.board[y][x] in (self.__charList['miss'],
-                                self.__charList['hit']):
-            return True
-        return False
-
-    def __find_ship_coords(self, ship, origin, direction):
+    def __find_ship_coord(self, ship, origin, direction):
         '''
         Checks if board is empty on given direction for given ship
         from the chosen origin
@@ -144,13 +138,9 @@ class Board:
                                     and coresponding vector values
         Otherwise returns an empty list
         '''
-        # Convert input to 0 indexed numbers
-        # by calling the new single tuple origin_inp first item
-        # in the generator comprehension
-        # origin = next(((x-1, y-1) for x, y in (origin_inp,)))
         found_directions = []
         for (char, direct) in self.get_dirs:
-            if self.__find_ship_coords(ship, origin, direct):
+            if self.__find_ship_coord(ship, origin, direct):
                 found_directions.append((char, direct))
 
         return tuple(found_directions)
@@ -179,7 +169,7 @@ class Board:
             except StopIteration:
                 # If not valid in any direction
                 return self.random_placement(ship)
-            found_coords = self.__find_ship_coords(ship, (x, y), direction)
+            found_coords = self.__find_ship_coord(ship, (x, y), direction)
             if found_coords:
                 # If ship can be placed on given direction break the loop
                 break
@@ -205,7 +195,7 @@ class Board:
             return True
 
         direction = self.__dir_from_char(direction_inp)
-        found_ship_coords = self.__find_ship_coords(ship, origin, direction)
+        found_ship_coords = self.__find_ship_coord(ship, origin, direction)
         if found_ship_coords:
             self.ships.add(ship)
             for x, y in found_ship_coords:
@@ -221,14 +211,16 @@ class Board:
         Checks and modifies board for the given coordinates
         Returns True if ship got hit, False for miss, or <ship> if sank
         '''
-        # I still have design issues
+        # It's getting worse
         for ship in self.ships:
             hit = ship.take_hit((x, y))  # 'hit' can be the 'ship' if sank
             self.ships.discard(hit)  # removes from the 'ships' if it is
 
             if hit:
                 self.board[y][x] = self.__charList['hit']
+                self.fog.remove((x, y))
                 return hit
 
         self.board[y][x] = self.__charList['miss']
+        self.fog.remove((x, y))
         return False
