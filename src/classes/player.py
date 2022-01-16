@@ -36,8 +36,25 @@ class Computer(Player):
     '''
     Creates a computer specific player instance
     '''
-    def __init__(self, board=None):
-        Player.__init__(self, self.__random_name(), board)
+    def __init__(self, player_name, board=None):
+        npc_name = 'Computer'
+        self.__normal_difficulty = True
+        if player_name.lower() == npc_name.lower():
+            npc_name = 'Quantum Computer'  # 😂
+            self.__normal_difficulty = False
+        Player.__init__(self, npc_name, board)
 
-    def __random_name(self):
-        return 'Computer'
+    def guess(self, player_board):
+        '''Returns the computer random guess'''
+        if self.__normal_difficulty:
+            return player_board.rand_coord()
+        # Easter egg
+        try:  # Test just in case
+            ship = player_board.ships.pop()
+        except KeyError:
+            self.__normal_difficulty = True
+            return self.guess(player_board)
+
+        player_board.ships.add(ship)
+
+        return ship.get_a_pos()

@@ -46,7 +46,7 @@ class Game:
 
     def __computer_turn(self):
         '''Computer turn'''
-        comp_guess = self.player.board.rand_coord()
+        comp_guess = self.computer.guess(self.player.board)
         hit = self.player.board.take_shot(*comp_guess)
         self.print_game_board()
 

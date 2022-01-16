@@ -16,11 +16,23 @@ class Ship:
         return self.__length
 
     def add_pos(self, coord):
+        '''Add a coord for the ship part'''
         self.positions.add(coord)
         return self
 
     def check_pos(self, coord):
-        return True if coord in self.positions else False
+        '''Checks if ship part is on coord'''
+        return coord in self.positions
+
+    def get_a_pos(self):
+        '''Copy a position from the set and return it'''
+        try:
+            pos = self.positions.pop()
+        except KeyError:
+            return None
+
+        self.add_pos(pos)
+        return pos
 
     def take_hit(self, coord):
         '''

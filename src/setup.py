@@ -43,7 +43,7 @@ def init_game():
     player = Player(choose_name())
     player.add_new_board()
 
-    computer = Computer()
+    computer = Computer(player.name)
     computer.add_new_board()
 
     print(f'Name is {player.name}')
