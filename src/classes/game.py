@@ -40,7 +40,7 @@ class Game:
         else:
             print('Hit!')
             if isinstance(hit, Ship):
-                print(f'{hit.name} got sanked.')
+                print(f'{hit.name} sank.')
 
         input('Press Enter to continue...')
 
