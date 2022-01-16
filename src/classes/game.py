@@ -33,7 +33,7 @@ class Game:
             self.computer.board)
 
         self.player.add_shot()
-        self.game_board()
+        self.print_game_board()
 
         if not hit:
             print('Miss...')
@@ -48,7 +48,7 @@ class Game:
         '''Computer turn'''
         comp_guess = self.player.board.rand_coord()
         hit = self.player.board.take_shot(*comp_guess)
-        self.game_board()
+        self.print_game_board()
 
         if not hit:
             print(f'{self.computer.name} missed the shot.')
@@ -62,49 +62,20 @@ class Game:
         return (len(self.player.ships) and
                 len(self.computer.ships))
 
-    def game_board(self):
+    def print_game_board(self):
         '''
-        Prints the game area with the player and computer boards,
-        shot count and player info
+        Prints the game area with the player and computer boards, and names
         Each column of the board row have 3 char length
         and indexed rows and columns
-
         '''
-        player = self.player
-        computer = self.computer
-
-        board_width = player.board.width
-        board_height = player.board.height
+        player_board = self.player.board.get_printable_board()
+        computer_board = self.computer.board.get_printable_board()
 
         os.system('cls||clear')
-        print(f'\n {player.name}'
-              f'{" "*(41 - len(player.name) + 1)}{computer.name}')
+        print(f'\n {self.player.name}'
+              f'{" "*(41 - len(self.player.name) + 1)}{self.computer.name}')
 
-        def create_vertical_indexes():
-            # creates a string with the column indexes (the x axis)
-            row = '  '  # leave space for horizontal indexes
-            for column_i in range(1, board_width+1):
-                # Add two spaces for a single digit, one space for two digits
-                row += f" {column_i}" if column_i // 10 else f" {column_i} "
+        game_board = zip(player_board, computer_board)
 
-            return row
-
-        vertical_indexes = create_vertical_indexes()
-        vertical_indexes += ' '*(42-len(vertical_indexes))
-        vertical_indexes += create_vertical_indexes()
-        print(vertical_indexes)
-
-        for row_i in range(1, board_height+1):
-            row = ''
-            ind = f"{'' if row_i // 10 else ' '}{row_i}"
-            row += ind
-            for col_i in range(board_width):
-                row += f' {player.board.board[row_i-1][col_i]} '
-
-            row += ' '*4
-            row += ' '*(40-len(row))
-            row += ind
-            for col_i in range(board_width):
-                row += f' {computer.board.board[row_i-1][col_i]} '
-
-            print(row)
+        for row in game_board:
+            print(''.join(row))

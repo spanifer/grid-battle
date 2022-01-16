@@ -1,4 +1,5 @@
 import random
+from src.helpers import center
 
 
 class Board:
@@ -224,3 +225,32 @@ class Board:
         self.board[y][x] = self.__charList['miss']
         self.fog.remove((x, y))
         return False
+
+    def get_printable_board(self, **mask):
+        '''Returns a list of string for indexed game-board rows
+        In the form of 3 character on each cell
+        Can add arbitrary character on board with a dict of positions
+        and coresponding character'''
+        board = self.board  # store the Board.board
+        # creates a string with the column indexes (the x axis)
+        c_inds = '  '  # leave space for horizontal indexes
+        for col_i in range(1, self.width+1):
+            # Add two spaces for a single digit, one space for two digits
+            c_inds += center(str(col_i), 3, left_align=False)
+
+        table = [c_inds]  # list of rows for the final print
+
+        for row_i in range(1, self.height+1):
+            row = []
+            row.append(center(str(row_i), 2, False))  # row index
+            for col_i in range(self.width):
+                row.append(f' {board[row_i-1][col_i]} ')
+            table.append(row)
+
+        if mask:
+            # NOTE:mask should be a predefined data structure
+            for (col, row), char in mask.items():
+                table[row+2][col+1] = center(char, 3)
+
+        # center each row in half of the screen width
+        return [center(''.join(row), 40) for row in table]

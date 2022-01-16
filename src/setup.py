@@ -15,7 +15,7 @@ def random_placement(game):
         ship = ships.pop(0)
         game.player.board.random_placement(ship())
         game.computer.board.random_placement(ship(), hide=True)
-    game.game_board()
+    game.print_game_board()
 
 
 def manual_placement(game):
@@ -27,13 +27,13 @@ def manual_placement(game):
 
     while ships:
         ship = ships.pop(0)
-        game.game_board()
+        game.print_game_board()
         take_coords(
             f'Choose a coordinate for your {ship().name}: ',
             game.player.board,
             ship())
         game.computer.board.random_placement(ship(), hide=True)
-    game.game_board()
+    game.print_game_board()
 
 
 def init_game():
