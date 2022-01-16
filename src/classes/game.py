@@ -48,7 +48,7 @@ class Game:
             ship = ships.pop(0)
             self.player.board.random_placement(ship())
             self.computer.board.random_placement(ship(), hide=True)
-        self.print_game_board()
+        self.__print_game_board()
 
     def __manual_placement(self):
         '''
@@ -59,13 +59,13 @@ class Game:
 
         while ships:
             ship = ships.pop(0)
-            self.print_game_board()
+            self.__print_game_board()
             take_coords(
                 f'Choose a coordinate for your {ship().name}: ',
                 self.player.board,
                 ship())
             self.computer.board.random_placement(ship(), hide=True)
-        self.print_game_board()
+        self.__print_game_board()
 
     def __game_loop(self):
         '''
@@ -88,7 +88,7 @@ class Game:
             self.computer.board)
 
         self.player.add_shot()
-        self.print_game_board()
+        self.__print_game_board()
 
         if not hit:
             print('Miss...')
@@ -103,7 +103,7 @@ class Game:
         '''Computer turn'''
         comp_guess = self.computer.guess(self.player.board)
         hit = self.player.board.take_shot(*comp_guess)
-        self.print_game_board()
+        self.__print_game_board()
 
         if not hit:
             print(f'{self.computer.name} missed the shot.')
@@ -117,7 +117,7 @@ class Game:
         return (len(self.player.ships) and
                 len(self.computer.ships))
 
-    def print_game_board(self):
+    def __print_game_board(self):
         '''
         Prints the game area with the player and computer boards, and names
         Each column of the board row have 3 char length
