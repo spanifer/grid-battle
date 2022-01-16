@@ -5,13 +5,14 @@ def choose_name():
     '''
     Request the user for a character name and confirms the te selected name
     '''
-    print('\nChoose a name for your captain (min 3 maximum 16 character)')
+    print('\nChoose a name for your commander\n'
+          '(minimum 3, maximum 16 Roman characters only)\n')
     name = input('Name: ')
 
     def agree_on_name():
         nonlocal name
 
-        print(f'Your captains name will be: {name}')
+        print(f'Your commander name will be: {name}')
         agreement = input('Is this ok? (y)es/(n)o ').lower()
         if agreement in ('n', 'no'):
             return choose_name()
@@ -21,6 +22,13 @@ def choose_name():
             print(f'Invalid answer:\n> {agreement}\n')
             return agree_on_name()
 
+    exclude_special_chars = re.compile(
+        r'^ *([A-Za-z]+ {1}[A-Za-z]+|[A-Za-z]+) *$').match(name)
+    if not exclude_special_chars:
+        print('Roman characters only and no middle names please.')
+        return choose_name()
+
+    name = exclude_special_chars.group(1)
     if len(name) > 16:
         name = name[:16]
         print('Name is longer than 16 characters.')
