@@ -1,18 +1,73 @@
 import os
-from src.user_input import take_shot_inp
+from src.classes.player import Player, Computer
 from src.classes.ships import Ship
+from src.data import list_of_ships
+from src.user_input import (choose_name, choose_placement_type,
+                            take_coords, take_shot_inp)
 
 
 class Game:
     '''
     Game class, main game course
     '''
-    def __init__(self, player, computer):
-        self.player = player
-        self.computer = computer
+    def __init__(self):
+        self.player = None
+        self.computer = None
         self.__is_player_turn = False
+        self.__init_game()
 
-    def game_loop(self):
+    def __init_game(self):
+        '''Game entry point'''
+        os.system('cls||clear')
+
+        self.player = Player(choose_name())
+        self.player.add_new_board()
+
+        self.computer = Computer(self.player.name)
+        self.computer.add_new_board()
+
+        print(f'Name is {self.player.name}')
+
+        placement_type = choose_placement_type()
+
+        # Placement loop
+        if placement_type == 'random':
+            self.__random_placement()
+        elif placement_type == 'manual':
+            self.__manual_placement()
+
+        self.__game_loop()
+
+    def __random_placement(self):
+        '''
+        Loops through the list of ships and randomly place them on board
+        '''
+        ships = list_of_ships.copy()
+
+        while ships:
+            ship = ships.pop(0)
+            self.player.board.random_placement(ship())
+            self.computer.board.random_placement(ship(), hide=True)
+        self.print_game_board()
+
+    def __manual_placement(self):
+        '''
+        Loops through the list of ships
+        and prompts the player to give coordinates to place them on board
+        '''
+        ships = list_of_ships.copy()
+
+        while ships:
+            ship = ships.pop(0)
+            self.print_game_board()
+            take_coords(
+                f'Choose a coordinate for your {ship().name}: ',
+                self.player.board,
+                ship())
+            self.computer.board.random_placement(ship(), hide=True)
+        self.print_game_board()
+
+    def __game_loop(self):
         '''
         Initiates the game loop
         Alternating between the player and computer turn

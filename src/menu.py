@@ -1,5 +1,5 @@
 import os
-from src.setup import init_game
+from src.classes.game import Game
 
 
 def print_title():
@@ -41,7 +41,7 @@ def menu(option=None):
     option = input('\n ')
 
     if option == '1':
-        init_game()
+        Game()
     elif option == '2':
         print('High scores')
     elif option == '3':
