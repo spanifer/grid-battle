@@ -1,5 +1,6 @@
 import os
 from src.user_input import take_shot_inp
+from src.classes.ships import Ship
 
 
 class Game:
@@ -12,7 +13,10 @@ class Game:
         self.__is_player_turn = False
 
     def game_loop(self):
-        '''Initiates the game loop'''
+        '''
+        Initiates the game loop
+        Alternating between the player and computer turn
+        '''
         while self.__check_win():
             self.__is_player_turn = not self.__is_player_turn
             if self.__is_player_turn:
@@ -22,7 +26,7 @@ class Game:
 
     def __player_turn(self):
         '''Player turn'''
-        is_hit = take_shot_inp(
+        hit = take_shot_inp(
             'Take a guess as the number of '
             'the column and row like: X,Y or X Y'
             '\n Your guess is: ',
@@ -31,21 +35,27 @@ class Game:
         self.player.add_shot()
         self.game_board()
 
-        if is_hit:
-            print('Hit!')
-        else:
+        if not hit:
             print('Miss...')
+        else:
+            print('Hit!')
+            if isinstance(hit, Ship):
+                print(f'{hit.name} got sanked.')
+
+        input('Press Enter to continue...')
 
     def __computer_turn(self):
         '''Computer turn'''
         comp_guess = self.player.board.rand_coord()
+        hit = self.player.board.take_shot(*comp_guess)
+        self.game_board()
 
-        if self.player.board.take_shot(*comp_guess):
-            self.game_board()
-            print('You received a hit.')
-        else:
-            self.game_board()
+        if not hit:
             print(f'{self.computer.name} missed the shot.')
+        else:
+            print('You received a hit.')
+            if isinstance(hit, Ship):
+                print(f'{self.computer.name} sank your {hit.name}.')
 
     def __check_win(self):
         '''Checks if one of the players lost all of their ships'''
