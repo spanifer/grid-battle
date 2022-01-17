@@ -111,7 +111,7 @@ def take_coords(prompt_msg, board, ship):
     # Submarine case 👇
     available_dirs = None
     if ship.length > 1:
-        available_dirs = board.find_valid_dirs(ship, x, y)
+        available_dirs = board.find_valid_dirs(ship, (x, y))
 
     if not range_is_valid:
         print('Coordinates out of range.')
