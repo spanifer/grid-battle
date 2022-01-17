@@ -1,6 +1,7 @@
 import os
 from src.classes.game import Game
 from src.high_score import print_high_scores
+from src.rules import print_game_rules
 
 
 def print_title():
@@ -49,11 +50,10 @@ def menu(option=None):
     option = input('\n ')
 
     if option == '1':
-        Game()
+        clear_run_input(Game)
     elif option == '2':
         clear_run_input(print_high_scores)
     elif option == '3':
-        print('Rules')
-        input('Press Enter to return to menu...')
+        clear_run_input(print_game_rules)
 
     return menu()
