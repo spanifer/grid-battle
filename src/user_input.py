@@ -1,6 +1,21 @@
 import re
 
 
+def agree_on(msg, name, *args, func=lambda: None):
+    '''Asks the user yes or no about msg
+    returns name if agreed
+    calls func if did not agree'''
+    print(f'{msg} {name}')
+    agreement = input('Is this ok? (y)es/(n)o ').lower()
+    if agreement in ('n', 'no'):
+        return func(*args)
+    elif agreement in ('y', 'yes'):
+        return name
+    else:
+        print(f'Invalid answer:\n> {agreement}\n')
+        return agree_on(msg, name, args, func=func)
+
+
 def choose_name():
     '''
     Request the user for a character name and confirms the te selected name
@@ -8,19 +23,6 @@ def choose_name():
     print('\nChoose a name for your commander\n'
           '(minimum 3, maximum 16 Roman characters only)\n')
     name = input('Name: ')
-
-    def agree_on_name():
-        nonlocal name
-
-        print(f'Your commander name will be: {name}')
-        agreement = input('Is this ok? (y)es/(n)o ').lower()
-        if agreement in ('n', 'no'):
-            return choose_name()
-        elif agreement in ('y', 'yes'):
-            return name
-        else:
-            print(f'Invalid answer:\n> {agreement}\n')
-            return agree_on_name()
 
     exclude_special_chars = re.compile(
         r'^ *([A-Za-z]+ {1}[A-Za-z]+|[A-Za-z]+) *$').match(name)
@@ -36,7 +38,7 @@ def choose_name():
         print('Name should be at least 3 characters.')
         return choose_name()
 
-    return agree_on_name()
+    return agree_on('Your commander name will be:', name, func=choose_name)
 
 
 def choose_placement_type():

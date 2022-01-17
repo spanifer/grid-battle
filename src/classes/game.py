@@ -1,9 +1,13 @@
 import os
+import re
 from src.classes.player import Player, Computer
 from src.classes.ships import Ship
 from src.settings import list_of_ships
-from src.user_input import (choose_name, choose_placement_type,
-                            take_coords, take_shot_inp)
+from src.high_score import (
+    get_scores, is_high_score, add_to_scores, sort_scores, print_high_scores)
+from src.user_input import (
+    choose_name, choose_placement_type, take_coords, take_shot_inp,
+    agree_on)
 
 
 class Game:
@@ -79,6 +83,8 @@ class Game:
             else:
                 self.__computer_turn()
 
+        self.__conclude()
+
     def __player_turn(self):
         '''Player turn'''
         hit = take_shot_inp(
@@ -116,6 +122,44 @@ class Game:
         '''Checks if one of the players lost all of their ships'''
         return (len(self.player.ships) and
                 len(self.computer.ships))
+
+    def __conclude(self):
+        '''End the game; if player won, show high scores'''
+        if self.player.ships:
+            print('Well done commander! You destroyed the enemy fleet.\n')
+            print(f'You fired {self.player.shots} rounds.')
+            scores = get_scores()
+            if not is_high_score(scores, ['dummy', self.player.shots]):
+                return  # It would be bad user experience after a win
+
+            self.__add_high_score(scores)
+            return
+
+        input('You lost this battle. Press Enter to return to menu...')
+
+    def __add_high_score(self, scores):
+        '''To exclude profanity checks on a 16 char long
+        arbitrary text as name take a 3 letter as a name instead '''
+        print('You are in the Top Ten!\n'
+              'Unfortunately for now, you can only chose 3 letters '
+              'that will represents you.')
+        name = agree_on('How about the first 3 letter of your chosen name?',
+                        self.player.name[:3].upper())
+        if not name:
+            name = input('So what should the 3 characters be: ').upper()
+            match = re.compile(r'^[A-Za-z]{3}$').match(name)
+            if not match:
+                print(f'Unable to add ({name})')
+                return
+
+        player_score_row = [name, self.player.shots]
+        scores = sort_scores(scores, player_score_row)
+        player_pos = scores.index(player_score_row)
+
+        add_to_scores(player_score_row, player_pos)
+
+        print_high_scores()
+        print('\n🥳\n')
 
     def __print_game_board(self):
         '''
