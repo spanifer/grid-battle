@@ -8,7 +8,7 @@ As a child I played this game with my father with somewhat different setup, call
 
 [View the live project here.](https://grid-battle.herokuapp.com/)
 
-![Responsive Design from http://ami.responsivedesign.is/]()
+![Responsive Design from http://ami.responsivedesign.is/](readme/ami.png)
 
 # Table of content
 
@@ -25,18 +25,36 @@ As a child I played this game with my father with somewhat different setup, call
 <h2 id="gameplay">How to play</h2>
 <a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
 
+-   The game play consist of two phases. The placement phase, and the battle phase. On starting a new game, first the user have to choose a name for his commander, and decide on random or manual placement for the ships.
+
+-   The game rules were chosen from [this](http://www.papg.com/show?1TMC) website.
+
+-   Further game rules can be viewed in the application 'game rules'
 ## Features
 <a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
 
-- Main menu
+- Main menu - where user can initiate the following available options
 
 - Battleships game
+    - Username, and other user input validation
+    - Random/manual ship placement
+    - Sank ship announcement
+    - Impossible game difficult in a special case
 
-- High Scores
+- High scores - stored in a spreadsheet on Google cloud
+    - High scores can be viewed from the menu
+    - If a player achieves high score it can be added on to the list
 
-- Game Rules
+- A description of the game rules
 
-- Battleplanes game mode
+- ~~Battleplanes game mode~~
+
+    ### Features left to implement:
+
+    -   reverse impossible difficulty
+    -   cancel ship placement on direction change
+    -   Battleplanes game mode
+
 
 ## Design Process
 <a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
@@ -53,12 +71,12 @@ As a child I played this game with my father with somewhat different setup, call
     -   To give the option for the player to save an achieved high score.
     -   To allow the user to have an unambiguous, error free, gameplay experience.
 -   #### Roadmap
-    1.  *Menu* - main menu with multiple options
-    1.  *Battleships game* - the main game implementation
-    1.  *High scores* - stored in a local json
-    1.  *Game rules* - description of
-    1.  *Battleplanes game mode* - the special game
-    1.  Testing
+    1.  *Menu* - main menu with multiple options ✔
+    1.  *Battleships game* - the main game implementation ✔
+    1.  *High scores* - stored in spreadsheet on cloud ✔
+    1.  *Game rules* - description of game rules ✔
+    1.  *Battleplanes game mode* - the special game ❌
+    1.  Testing ✔
 
 ### Flowchart
 
@@ -68,7 +86,8 @@ To have an understanding of the required step for the application, I have create
 
 ### Data Model
 
-Halfway through development I began to realize how to *think* to approach modeling data. The updated chart below shows most of the data model utilized.
+Following the flowchart I have tried to map all the necessary data relations to create the data model.
+Halfway through development I began to realize how to *think* to approach modeling data. The updated chart below shows most of the data model utilized. Unfortunately it doesn't completely reflect the implemented code, but this is the foundation it lays on.
 
 ![Data Model](readme/diagrams/data-model.drawio.svg)
 
@@ -99,14 +118,23 @@ I have separated class definitions as `/classes`.
 -   [Python](http://pep8online.com/)
 
 ### Testing User Stories
-
+1.  As a new user I have quick access to the game rules from the main menu. The text can be improved, but shows all the necessary info in a short read to prepare for the first game.
+1.  As a user I get clear feedback in text form about what happening and why.
+1.  As a user I can achieve a high score and have access to look at other people achieved scores.
 ### Further Testing
 
--   ~~Friends and family members were asked to review the app~~
+-   ~~Friends and family members were asked to review the app~~ (not the final version)
+-   Throughout the whole development the debugging tool was my best friend. Implementing each feature required to manually retest each of the application features.
+-   
+
+### Future improvements, optimizations
+
+-   in board.py get_ocupied_coords can be memoized
+-   the game board could be printed only if it is changed
 
 ### Found Bugs
 
-During the development process I have encountered and produced several bugs and errors that required a solution. I have documented the causes and solutions here.
+During the development process I have encountered and produced several bugs and errors that required a fix. I have documented the causes and solutions here.
 
 -   String delimiter error: `SyntaxError: f-string: expecting '}'`
     -   Intent:
@@ -160,16 +188,6 @@ The project was deployed using Code Institute's mock terminal for Heroku.
     -   Link the Heroku app to the forked repository
     -   Manually **Deploy**
 
-### Making a Local Clone
-
-> *Review* to make the whole project locally deployable
-
-Requires Python 3 installed in local environment, to run the game in a terminal
-
--   Fork or clone this repository
--   Navigate to folder in a terminal
--   Run the following command `python3 run.py`
-
 ## Credits
 <a href="#table-of-content">Go back <span style="font-size: 1.3em">🔝</span></a>
 
@@ -183,9 +201,13 @@ Requires Python 3 installed in local environment, to run the game in a terminal
 -   [Python Generators](https://www.python.org/dev/peps/pep-0255/#specification-yield)
 -   [To test and build Regular Expressons](https://regexr.com/)
 -   [Python RegEx documentation](https://docs.python.org/3/howto/regex.html#performing-matches)
+-   [Gspread API reference](https://docs.gspread.org/en/latest/api.html?highlight=insert%20row#gspread.worksheet.Worksheet.insert_row)
+-   [Generate random letter](https://stackoverflow.com/questions/2823316/generate-a-random-letter-in-python#answer-2823357)
 
 ### Acknowledgements
 
 -   Code Institute for the deployment terminal
+-   Code Institute Love Sandwiches API access code core
 -   [Pen and paper](http://www.papg.com/show?1TMC) website for the game rules reference
 -   README.md structure inspired by several Code Institute's samples
+-   My mentor for all the great tips, and valuable insights

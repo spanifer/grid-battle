@@ -1,3 +1,5 @@
+'''From Code institute walkthrough project "Love sandwitches"'''
+
 import gspread
 from google.oauth2.service_account import Credentials
 from src.helpers import center
