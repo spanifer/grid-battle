@@ -8,8 +8,8 @@ class Board:
     Creates an instance of a game board
     '''
     def __init__(self, owner):
-        self.__width = 12
-        self.__height = 12
+        self.__width = 9
+        self.__height = 9
         self.owner = owner
         self.board = self.__create_board()
         self.ships = set()  # list of ships

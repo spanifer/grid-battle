@@ -1,5 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
+from src.helpers import center
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -43,3 +44,25 @@ def add_to_scores(score, index):
     NOTE: This somehow runs in sync'''
     high_scores.delete_rows(11)
     high_scores.insert_row(score, index+1)
+
+
+def print_high_scores(scores=None):
+    '''Prints the high scores fetched from sheet'''
+    if not scores:
+        scores = get_scores('')
+
+    print('\n')
+    print(center('High Scores', 80))
+    print('\n')
+
+    rank = 0
+    for [name, shot_count], i in zip(scores, range(len(scores))):
+        prev_shot_count = None
+        try:
+            prev_shot_count = scores[i-1][1]
+        except StopIteration:
+            pass
+        if prev_shot_count != shot_count:
+            rank += 1
+        print(center(
+            f'{rank} {name}    {shot_count}', 80))

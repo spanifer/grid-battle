@@ -1,5 +1,6 @@
 import os
 from src.classes.game import Game
+from src.high_score import print_high_scores
 
 
 def print_title():
@@ -27,6 +28,13 @@ def print_options(invalid_str=None):
               'Please type a number from 1 to 3')
 
 
+def clear_run_input(func):
+    '''Wraps the func between clear screen and input request'''
+    os.system('cls||clear')
+    func()
+    input('Press Enter to return to menu...')
+
+
 def menu(option=None):
     '''
     (Re)displays the menu
@@ -43,8 +51,9 @@ def menu(option=None):
     if option == '1':
         Game()
     elif option == '2':
-        print('High scores')
+        clear_run_input(print_high_scores)
     elif option == '3':
         print('Rules')
+        input('Press Enter to return to menu...')
 
     return menu()
