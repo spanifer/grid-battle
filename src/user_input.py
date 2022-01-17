@@ -45,7 +45,7 @@ def choose_placement_type():
     '''
     Allows the user to choose from random or manual ship placement
     '''
-    print('Do you want to place your ships on the grid or want it'
+    print('Do you want to place your ships on the grid or want it '
           'randomly placed?')
     placement_type = input('Type (R)andom or (M)anual: ').lower()
 
