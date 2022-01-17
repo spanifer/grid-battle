@@ -36,7 +36,8 @@ def sort_scores(scores, new_score):
     '''Append new score to scores
     Sorts the list by shot count value'''
     scores.append(new_score)
-    return scores.sort(key=lambda r: int(r[1]))
+    scores.sort(key=lambda r: int(r[1]))
+    return scores
 
 
 def add_to_scores(score, index):
